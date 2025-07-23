@@ -13,7 +13,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use(
 	cors({
-		origin: ["https://instagram-blush-six.vercel.app/"],
+		origin: ["https://instagram-plum-eight.vercel.app/"],
 		credentials: true,
 	})
 );

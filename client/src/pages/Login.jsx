@@ -1,25 +1,36 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
+	const uri = import.meta.env.VITE_BASE_URL;
 
-	const handleLogin = (e) => {
-		e.preventDefault();
-
-		const storedUser = JSON.parse(localStorage.getItem("user"));
-
-		if (
-			storedUser &&
-			storedUser.email === email &&
-			storedUser.password === password
-		) {
-			localStorage.setItem("auth", "true");
+	useEffect(() => {
+		const token = localStorage.getItem("token");
+		if (token) {
 			navigate("/feed");
-		} else {
-			alert("Invalid credentials!");
+		}
+	}, []);
+
+	const handleLogin = async (e) => {
+		e.preventDefault();
+		try {
+			const res = await axios.post(`${uri}/api/auth/login`, {
+				email,
+				password,
+			});
+
+			localStorage.setItem("token", res.data.token);
+			localStorage.setItem("user", JSON.stringify(res.data.user));
+			localStorage.setItem("auth", "true"); // 👈 add this for ProtectedRoute check
+
+			navigate("/feed");
+		} catch (err) {
+			console.error("Login Error:", err?.response?.data || err.message);
+			alert("Login failed");
 		}
 	};
 
@@ -58,9 +69,9 @@ const Login = () => {
 
 				<div className="mt-6 text-center text-sm text-gray-600 font-retro">
 					Don't have an account?{" "}
-					<a href="/signup" className="text-igBlue font-bold">
+					<Link to="/signup" className="text-igBlue font-bold">
 						Sign up
-					</a>
+					</Link>
 				</div>
 			</div>
 		</div>

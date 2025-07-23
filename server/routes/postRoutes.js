@@ -1,16 +1,19 @@
 import express from "express";
-import multer from "multer";
-import { createPost, getAllPosts } from "../controllers/postController.js";
+import {
+	createPost,
+	getAllPosts,
+	likePost,
+	comments,
+} from "../controllers/postController.js";
+import { protect } from "../middleware/auth.js";
+import { getComments } from "../controllers/postController.js";
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => cb(null, "uploads/"),
-	filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
-});
-const upload = multer({ storage });
-
-router.post("/", upload.single("image"), createPost);
+router.post("/", createPost); // ✅ plain JSON
 router.get("/", getAllPosts);
+router.put("/:postId/like", likePost);
+router.post("/:postId/comments", protect, comments);
+router.get("/:postId/comments", getComments);
 
 export default router;

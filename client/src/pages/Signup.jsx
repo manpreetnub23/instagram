@@ -1,19 +1,33 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const Signup = () => {
+	const uri = import.meta.env.VITE_BASE_URL;
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const navigate = useNavigate();
 
-	const handleSignup = (e) => {
-		e.preventDefault();
+	useEffect(() => {
+		localStorage.removeItem("auth"); // 👈 reset auth on signup page
+		localStorage.removeItem("token");
+		localStorage.removeItem("user");
+	}, []);
 
-		const user = { username, email, password };
-		localStorage.setItem("user", JSON.stringify(user));
-		localStorage.setItem("auth", "true");
-		navigate("/");
+	const handleSignup = async (e) => {
+		e.preventDefault();
+		try {
+			await axios.post(`${uri}/api/auth/register`, {
+				username,
+				email,
+				password,
+			});
+			navigate("/");
+		} catch (err) {
+			console.error("Signup failed:", err?.response?.data || err.message);
+			alert("Signup failed. Please try again.");
+		}
 	};
 
 	return (
@@ -33,6 +47,7 @@ const Signup = () => {
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
 						className="w-full px-3 py-2 rounded-md border border-lightBrown focus:outline-none focus:ring-2 focus:ring-igBlue"
+						required
 					/>
 					<input
 						type="email"
@@ -40,6 +55,7 @@ const Signup = () => {
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						className="w-full px-3 py-2 rounded-md border border-lightBrown focus:outline-none focus:ring-2 focus:ring-igBlue"
+						required
 					/>
 					<input
 						type="password"
@@ -47,6 +63,7 @@ const Signup = () => {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						className="w-full px-3 py-2 rounded-md border border-lightBrown focus:outline-none focus:ring-2 focus:ring-igBlue"
+						required
 					/>
 					<button
 						type="submit"
@@ -58,9 +75,9 @@ const Signup = () => {
 
 				<div className="mt-6 text-center text-sm text-gray-600 font-retro">
 					Already have an account?{" "}
-					<a href="/" className="text-igBlue font-bold">
+					<Link to="/" className="text-igBlue font-bold">
 						Log in
-					</a>
+					</Link>
 				</div>
 			</div>
 		</div>

@@ -11,5 +11,11 @@ app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use(
+	cors({
+		origin: ["https://instagram-blush-six.vercel.app/"],
+		credentials: true,
+	})
+);
 
 export default app;

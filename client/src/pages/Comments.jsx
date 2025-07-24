@@ -43,7 +43,7 @@ const Comments = () => {
 	};
 
 	return (
-		<div className="max-w-md mx-auto p-4">
+		<div className="max-w-md mx-auto pt-12 p-2">
 			<h2 className="text-xl font-bold mb-4">Comments</h2>
 
 			<form onSubmit={handleCommentSubmit} className="mb-4 flex gap-2">

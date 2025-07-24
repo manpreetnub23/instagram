@@ -51,13 +51,13 @@ const FeedCard = ({
 	};
 
 	return (
-		<div className="bg-white rounded-lg shadow overflow-hidden mt-4">
+		<div className="bg-white rounded-lg shadow overflow-hidden mt-6">
 			<div className="px-4 py-2 font-semibold">{username}</div>
 
 			<img
 				src={image}
 				alt="post"
-				className="w-full h-72 object-cover rounded-3xl p-3" // 👈 fixed height, full width, cropped
+				className="w-full h-80 object-cover rounded-3xl p-3" // 👈 fixed height, full width, cropped
 			/>
 
 			<div className="px-4 py-2 space-y-2">

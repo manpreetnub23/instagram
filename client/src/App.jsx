@@ -1,9 +1,4 @@
-import {
-	BrowserRouter as Router,
-	Routes,
-	Route,
-	useLocation,
-} from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Feed from "./pages/Feed";
@@ -54,11 +49,7 @@ function Layout() {
 }
 
 function App() {
-	return (
-		<Router>
-			<Layout />
-		</Router>
-	);
+	return <Layout />;
 }
 
 export default App;

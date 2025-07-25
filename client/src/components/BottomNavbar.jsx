@@ -7,19 +7,27 @@ import { FaPlusSquare, FaHeart, FaUser } from "react-icons/fa";
 const BottomNavbar = () => {
 	const navigate = useNavigate();
 
+	const user = JSON.parse(localStorage.getItem("user"));
+
+	const navItems = [
+		{ icon: <AiFillHome />, to: "/feed" },
+		{ icon: <MdOutlineSearch />, to: "/search" },
+		{ icon: <FaPlusSquare />, to: "/upload" },
+		{ icon: <FaHeart />, to: "/likes" },
+		{ icon: <FaUser />, to: user ? `/profile/${user.username}` : "/login" },
+	];
+
 	return (
-		<div className="fixed bottom-0 left-0 right-0 bg-[#2f2f2f] px-6 py-4 flex justify-between items-center z-50 shadow-inner">
-			<AiFillHome
-				className="text-3xl text-white"
-				onClick={() => navigate("/feed")}
-			/>
-			<MdOutlineSearch className="text-3xl text-white" />
-			<FaPlusSquare
-				className="text-3xl text-white"
-				onClick={() => navigate("/upload")} // 👈 GO TO UPLOAD PAGE
-			/>
-			<FaHeart className="text-3xl text-white" />
-			<FaUser className="text-3xl text-white" />
+		<div className="fixed bottom-0 left-0 right-0 bg-[#2f2f2f] px-6 py-3 flex justify-between items-center z-50 shadow-inner">
+			{navItems.map((item, index) => (
+				<div
+					key={index}
+					className="text-white text-2xl cursor-pointer"
+					onClick={() => navigate(item.to)}
+				>
+					{item.icon}
+				</div>
+			))}
 		</div>
 	);
 };

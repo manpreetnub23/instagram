@@ -33,6 +33,7 @@ const Feed = () => {
 						caption={post.caption}
 						likes={post.likes}
 						comments={post.comments}
+						avatar={post.userId.avatar}
 					/>
 				))}
 			</div>

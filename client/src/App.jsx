@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import TopNavbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
 import Comments from "../src/pages/Comments";
+import Profile from "./pages/Profile"; // 👈 import profile
 
 function Layout() {
 	const location = useLocation();
@@ -39,6 +40,14 @@ function Layout() {
 					element={
 						<ProtectedRoute>
 							<Comments />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/profile/:username"
+					element={
+						<ProtectedRoute>
+							<Profile /> {/* 👈 added profile route */}
 						</ProtectedRoute>
 					}
 				/>

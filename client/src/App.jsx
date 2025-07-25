@@ -6,8 +6,12 @@ import UploadPage from "./pages/UploadPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import TopNavbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
-import Comments from "../src/pages/Comments";
-import Profile from "./pages/Profile"; // 👈 import profile
+import Comments from "./pages/Comments";
+import Profile from "./pages/Profile";
+
+// ✅ Toastify
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Layout() {
 	const location = useLocation();
@@ -16,6 +20,7 @@ function Layout() {
 	return (
 		<>
 			{!hideNav && <TopNavbar />}
+
 			<Routes>
 				<Route path="/" element={<Login />} />
 				<Route path="/signup" element={<Signup />} />
@@ -47,12 +52,16 @@ function Layout() {
 					path="/profile/:username"
 					element={
 						<ProtectedRoute>
-							<Profile /> {/* 👈 added profile route */}
+							<Profile />
 						</ProtectedRoute>
 					}
 				/>
 			</Routes>
+
 			{!hideNav && <BottomNavbar />}
+
+			{/* ✅ Toast container (place at bottom globally) */}
+			<ToastContainer position="top-center" />
 		</>
 	);
 }

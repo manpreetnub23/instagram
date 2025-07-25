@@ -62,3 +62,29 @@ export const updateUserAvatar = async (req, res) => {
 		res.status(500).json({ message: "Error uploading avatar" });
 	}
 };
+
+// controllers/userController.js
+
+export const updateUsername = async (req, res) => {
+	try {
+		const userId = req.user.id;
+		const { username } = req.body;
+
+		// check if username is taken
+		const existingUser = await User.findOne({ username });
+		if (existingUser && existingUser._id.toString() !== userId) {
+			return res.status(400).json({ message: "Username already taken" });
+		}
+
+		const user = await User.findByIdAndUpdate(
+			userId,
+			{ username },
+			{ new: true }
+		).select("-password");
+
+		res.json(user);
+	} catch (err) {
+		console.error("Username update failed:", err);
+		res.status(500).json({ message: "Error updating username" });
+	}
+};

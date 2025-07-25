@@ -179,6 +179,8 @@ const Profile = () => {
 	const token = localStorage.getItem("token");
 	const loggedInUser = JSON.parse(localStorage.getItem("user"));
 	const isOwnProfile = loggedInUser?.username === username;
+	const [editUsername, setEditUsername] = useState(false);
+	const [newUsername, setNewUsername] = useState("");
 
 	useEffect(() => {
 		const fetchProfile = async () => {
@@ -241,14 +243,31 @@ const Profile = () => {
 		}
 	};
 
+	const handleUsernameUpdate = async () => {
+		try {
+			const res = await axios.put(
+				`${uri}/api/users/username`,
+				{ username: newUsername },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			setUser((prev) => ({ ...prev, username: res.data.username }));
+			setEditUsername(false);
+
+			// Update localStorage
+			localStorage.setItem("user", JSON.stringify(res.data));
+		} catch (err) {
+			console.error("Failed to update username", err);
+		}
+	};
+
 	if (!user) return <p className="text-center pt-10">Loading...</p>;
 
 	return (
 		<div className="max-w-md mx-auto pt-16 pb-20 p-4">
-			{/* <h1 className="text-xl font-bold text-center mb-4">
-				{isOwnProfile ? "Your Profile" : `${user.username}'s Profile`}
-			</h1> */}
-
 			{/* Profile Info */}
 			<div className="flex items-center gap-4 mt-6 mb-6">
 				<div className="relative group">
@@ -273,7 +292,38 @@ const Profile = () => {
 				</div>
 
 				<div>
-					<h2 className="text-lg font-bold">{user.username}</h2>
+					{/* Username edit */}
+					{isOwnProfile && editUsername ? (
+						<div className="flex items-center gap-2">
+							<input
+								type="text"
+								value={newUsername}
+								onChange={(e) => setNewUsername(e.target.value)}
+								className="border px-2 py-1 text-sm rounded"
+							/>
+							<button
+								className="text-blue-600 text-sm"
+								onClick={handleUsernameUpdate}
+							>
+								Save
+							</button>
+						</div>
+					) : (
+						<div className="flex items-center gap-1">
+							<h2 className="text-lg font-bold">{user.username}</h2>
+							{isOwnProfile && (
+								<button
+									onClick={() => {
+										setEditUsername(true);
+										setNewUsername(user.username);
+									}}
+								>
+									<Pencil className="w-4 h-4 text-gray-500" />
+								</button>
+							)}
+						</div>
+					)}
+
 					<p className="text-sm text-gray-600">{user.email}</p>
 
 					{/* Bio */}

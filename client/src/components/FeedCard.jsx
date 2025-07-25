@@ -11,7 +11,7 @@ const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem("user"));
-		const userId = user?.id?.toString();
+		const userId = user?._id?.toString();
 
 		if (userId) {
 			const likeArray = likes.map((id) => id.toString());
@@ -24,7 +24,9 @@ const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 		try {
 			const token = localStorage.getItem("token");
 			const user = JSON.parse(localStorage.getItem("user"));
-			const userId = user?.id?.toString();
+			console.log("usrr is : ", user);
+			const userId = user?._id?.toString();
+			console.log("user id is : ", userId);
 
 			const res = await axios.put(
 				`${uri}/api/posts/${postId}/like`,
@@ -35,6 +37,9 @@ const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 					},
 				}
 			);
+			console.log("UserId:", userId);
+			console.log("LikeList:", likeList);
+			console.log("IsLiked:", isLiked);
 
 			const updatedLikes = res.data.likes.map((id) => id.toString());
 			setLikeList(updatedLikes);

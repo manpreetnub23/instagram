@@ -25,7 +25,7 @@ const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 			const token = localStorage.getItem("token");
 			const user = JSON.parse(localStorage.getItem("user"));
 			console.log("usrr is : ", user);
-			const userId = user?._id?.toString();
+			const userId = user?.id?.toString();
 			console.log("user id is : ", userId);
 
 			const res = await axios.put(

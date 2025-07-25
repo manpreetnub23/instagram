@@ -38,17 +38,24 @@ export const getAllPosts = async (req, res) => {
 // Like a post
 export const likePost = async (req, res) => {
 	try {
-		const { postId } = req.params;
-
-		const post = await Post.findById(postId);
+		const post = await Post.findById(req.params.postId);
 		if (!post) return res.status(404).json({ error: "Post not found" });
 
-		post.likes += 1;
-		await post.save();
+		if (!Array.isArray(post.likes)) post.likes = [];
 
-		res.json({ likes: post.likes });
+		if (post.likes.some((id) => id.toString() === req.user.id)) {
+			// Unlike
+			post.likes = post.likes.filter((id) => id.toString() !== req.user.id);
+		} else {
+			// Like
+			post.likes.push(req.user.id);
+		}
+
+		await post.save();
+		res.json(post);
 	} catch (err) {
-		res.status(500).json({ error: err.message });
+		console.error("Like Error:", err);
+		res.status(500).json({ error: "Failed to like/unlike post" });
 	}
 };
 
@@ -76,7 +83,11 @@ export const comments = async (req, res) => {
 // get comments.
 export const getComments = async (req, res) => {
 	try {
-		const post = await Post.findById(req.params.postId);
+		const post = await Post.findById(req.params.postId).populate(
+			"comments.userId",
+			"username"
+		);
+
 		if (!post) return res.status(404).json({ error: "Post not found" });
 
 		res.status(200).json(post.comments);

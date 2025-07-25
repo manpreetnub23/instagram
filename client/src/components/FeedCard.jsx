@@ -3,33 +3,32 @@ import { FaHeart, FaRegHeart, FaRegComment } from "react-icons/fa";
 import axios from "../api/axios";
 import { Link } from "react-router-dom";
 
-const FeedCard = ({
-	postId,
-	username,
-	image,
-	caption,
-	likes = [],
-	comments = [],
-}) => {
+const uri = import.meta.env.VITE_BASE_URL;
+
+const FeedCard = ({ postId, username, image, caption, likes = [] }) => {
+	const [likeList, setLikeList] = useState([]);
 	const [isLiked, setIsLiked] = useState(false);
-	const [likeCount, setLikeCount] = useState(
-		Array.isArray(likes) ? likes.length : 0
-	);
 
 	useEffect(() => {
-		const userId = localStorage.getItem("userId");
-		if (Array.isArray(likes) && userId) {
-			setIsLiked(likes.includes(userId));
+		// ✅ safely get userId inside useEffect
+		const user = JSON.parse(localStorage.getItem("user"));
+		const userId = user?.id?.toString();
+
+		if (userId) {
+			const likeArray = likes.map((id) => id.toString());
+			setLikeList(likeArray);
+			setIsLiked(likeArray.includes(userId));
 		}
-	}, [likes]);
+	}, []); // ✅ run only once on mount
 
 	const handleLike = async () => {
 		try {
 			const token = localStorage.getItem("token");
-			const userId = localStorage.getItem("userId");
+			const user = JSON.parse(localStorage.getItem("user"));
+			const userId = user?.id?.toString();
 
-			await axios.put(
-				`/posts/${postId}/like`,
+			const res = await axios.put(
+				`${uri}/api/posts/${postId}/like`,
 				{},
 				{
 					headers: {
@@ -38,13 +37,9 @@ const FeedCard = ({
 				}
 			);
 
-			// Optimistically update UI
-			if (isLiked) {
-				setLikeCount((prev) => prev - 1);
-			} else {
-				setLikeCount((prev) => prev + 1);
-			}
-			setIsLiked(!isLiked);
+			const updatedLikes = res.data.likes.map((id) => id.toString());
+			setLikeList(updatedLikes);
+			setIsLiked(updatedLikes.includes(userId));
 		} catch (err) {
 			console.error("Error liking post", err);
 		}
@@ -57,7 +52,7 @@ const FeedCard = ({
 			<img
 				src={image}
 				alt="post"
-				className="w-full h-80 object-cover rounded-3xl p-3" // 👈 fixed height, full width, cropped
+				className="w-full h-80 object-cover rounded-3xl p-3"
 			/>
 
 			<div className="px-4 py-2 space-y-2">
@@ -74,7 +69,7 @@ const FeedCard = ({
 						<FaRegComment className="cursor-pointer" />
 					</Link>
 				</div>
-				<p className="text-sm font-semibold">{likeCount} likes</p>
+				<p className="text-sm font-semibold">{likeList.length} likes</p>
 				<p className="text-sm">{caption}</p>
 			</div>
 		</div>

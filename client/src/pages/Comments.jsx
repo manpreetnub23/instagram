@@ -7,6 +7,8 @@ const Comments = () => {
 	const [comments, setComments] = useState([]);
 	const [newComment, setNewComment] = useState("");
 
+	const user = JSON.parse(localStorage.getItem("user")); // 👈 to get current username
+
 	useEffect(() => {
 		const fetchComments = async () => {
 			try {
@@ -25,6 +27,7 @@ const Comments = () => {
 
 		try {
 			const token = localStorage.getItem("token");
+
 			const res = await axios.post(
 				`/posts/${postId}/comments`,
 				{ text: newComment },
@@ -35,8 +38,16 @@ const Comments = () => {
 				}
 			);
 
-			setComments([...comments, res.data]); // add new comment to list
-			setNewComment(""); // clear input
+			// Optimistically add comment with current user
+			setComments([
+				...comments,
+				{
+					...res.data,
+					userId: { username: user?.username || "You" },
+				},
+			]);
+
+			setNewComment("");
 		} catch (err) {
 			console.error("Error posting comment", err);
 		}
@@ -65,7 +76,8 @@ const Comments = () => {
 			<ul className="space-y-2">
 				{comments.map((comment, idx) => (
 					<li key={idx} className="bg-white p-2 rounded shadow text-sm">
-						<strong>{comment.username || "Anonymous"}</strong>: {comment.text}
+						<strong>{comment.userId?.username || "Anonymous"}</strong>:{" "}
+						{comment.text}
 					</li>
 				))}
 			</ul>

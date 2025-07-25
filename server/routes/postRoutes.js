@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/", createPost); // ✅ plain JSON
 router.get("/", getAllPosts);
-router.put("/:postId/like", likePost);
+router.put("/:postId/like", protect, likePost);
 router.post("/:postId/comments", protect, comments);
 router.get("/:postId/comments", getComments);
 

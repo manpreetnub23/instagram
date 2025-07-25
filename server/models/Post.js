@@ -9,8 +9,17 @@ const postSchema = new mongoose.Schema(
 		},
 		caption: { type: String },
 		imageUrl: { type: String, required: true },
-		likes: { type: Number, default: 0 },
-		comments: [{ user: String, text: String }],
+		likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+		// comments: [{ user: String, text: String }],
+		comments: [
+			{
+				userId: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "User",
+				},
+				text: String,
+			},
+		],
 	},
 	{ timestamps: true }
 );

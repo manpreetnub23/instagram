@@ -56,7 +56,14 @@ const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 					alt="avatar"
 					className="w-8 h-8 rounded-full object-cover"
 				/>
-				<p className="font-semibold text-sm">{username}</p>
+				{/* <p className="font-semibold text-sm">{username}</p> */}
+				{/* yahan kuch changes kar raha hun main */}
+				<Link
+					to={`/profile/${username}`}
+					className="font-semibold text-sm hover:underline"
+				>
+					{username}
+				</Link>
 			</div>
 
 			<img

@@ -62,7 +62,7 @@ const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 			<img
 				src={image}
 				alt="post"
-				className="w-full h-100 object-cover rounded-3xl p-3"
+				className="w-full h-auto object-cover rounded-3xl p-3"
 			/>
 
 			<div className="px-4 py-2 space-y-2">

@@ -18,11 +18,11 @@ const BottomNavbar = () => {
 	];
 
 	return (
-		<div className="fixed bottom-0 left-0 right-0 bg-[#2f2f2f] px-6 py-3 flex justify-between items-center z-50 shadow-inner">
+		<div className="fixed bottom-0 left-0 right-0 bg-[#2f2f2f] px-6 py-4 flex justify-between items-center z-50 shadow-inner">
 			{navItems.map((item, index) => (
 				<div
 					key={index}
-					className="text-white text-2xl cursor-pointer"
+					className="text-white text-3xl cursor-pointer"
 					onClick={() => navigate(item.to)}
 				>
 					{item.icon}

@@ -76,7 +76,7 @@ const Profile = () => {
 	if (!user) return <p className="text-center pt-10">Loading...</p>;
 
 	return (
-		<div className="max-w-md mx-auto pt-16 pb-20 p-4">
+		<div className="max-w-md mx-auto pt-16 pb-20 p-2">
 			{/* Profile Info */}
 			<div className="flex items-center gap-4 mt-6 mb-6">
 				<div className="relative group">
@@ -146,13 +146,13 @@ const Profile = () => {
 			{posts.length === 0 ? (
 				<p className="text-gray-500 text-sm">No posts yet</p>
 			) : (
-				<div className="grid grid-cols-3 gap-2">
+				<div className="grid grid-cols-3 gap-0.5">
 					{posts.map((post) => (
 						<img
 							key={post._id}
 							src={post.imageUrl}
 							alt="user post"
-							className="w-full h-28 object-cover rounded"
+							className="w-full h-36 object-cover"
 						/>
 					))}
 				</div>

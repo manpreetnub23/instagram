@@ -11,6 +11,7 @@ const Profile = () => {
 	const [posts, setPosts] = useState([]);
 	const [editBio, setEditBio] = useState(false);
 	const [newBio, setNewBio] = useState("");
+	const token = localStorage.getItem("token");
 
 	useEffect(() => {
 		const fetchProfile = async () => {
@@ -28,9 +29,15 @@ const Profile = () => {
 
 	const handleBioUpdate = async () => {
 		try {
-			const res = await axios.put(`${uri}/api/users/${user._id}/bio`, {
-				bio: newBio,
-			});
+			const res = await axios.put(
+				`${uri}/api/users/${user._id}/bio`,
+				{ bio: newBio },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 			setUser((prev) => ({ ...prev, bio: res.data.bio }));
 			setEditBio(false);
 		} catch (err) {
@@ -54,7 +61,10 @@ const Profile = () => {
 				`${uri}/api/users/${user._id}/avatar`,
 				formData,
 				{
-					headers: { "Content-Type": "multipart/form-data" },
+					headers: {
+						"Content-Type": "multipart/form-data",
+						Authorization: `Bearer ${token}`, // 👈 THIS WAS MISSING
+					},
 				}
 			);
 			setUser((prev) => ({ ...prev, avatar: res.data.avatar }));

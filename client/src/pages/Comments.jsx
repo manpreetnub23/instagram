@@ -7,7 +7,7 @@ const Comments = () => {
 	const [comments, setComments] = useState([]);
 	const [newComment, setNewComment] = useState("");
 
-	const user = JSON.parse(localStorage.getItem("user")); // 👈 to get current username
+	const user = JSON.parse(localStorage.getItem("user"));
 
 	useEffect(() => {
 		const fetchComments = async () => {
@@ -38,7 +38,6 @@ const Comments = () => {
 				}
 			);
 
-			// Optimistically add comment with current user
 			setComments([
 				...comments,
 				{
@@ -54,33 +53,45 @@ const Comments = () => {
 	};
 
 	return (
-		<div className="max-w-md mx-auto pt-12 p-2">
-			<h2 className="text-xl font-bold mb-4">Comments</h2>
+		<div className="max-w-xl mx-auto pt-12 px-4">
+			<h2 className="text-xl font-semibold mb-4">Comments</h2>
 
-			<form onSubmit={handleCommentSubmit} className="mb-4 flex gap-2">
+			<div className="bg-white border border-gray-200 shadow p-4 space-y-3 max-h-[65vh] overflow-y-auto">
+				{comments.length === 0 ? (
+					<p className="text-gray-500 text-sm">No comments yet.</p>
+				) : (
+					comments.map((comment, idx) => (
+						<div
+							key={idx}
+							className="p-3 bg-gray-100 border border-gray-300 text-sm"
+						>
+							<strong className="block mb-1">
+								{comment.userId?.username || "Anonymous"}
+							</strong>
+							<p>{comment.text}</p>
+						</div>
+					))
+				)}
+			</div>
+
+			<form
+				onSubmit={handleCommentSubmit}
+				className="mt-4 flex gap-2 items-center"
+			>
 				<input
 					type="text"
 					value={newComment}
 					onChange={(e) => setNewComment(e.target.value)}
-					className="flex-1 p-2 border rounded"
+					className="flex-1 p-2 border border-gray-300"
 					placeholder="Add a comment..."
 				/>
 				<button
 					type="submit"
-					className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+					className="px-4 py-2 bg-gradient-to-r from-[#315d94] to-[#6191c2] text-white hover:cursor-pointer"
 				>
 					Post
 				</button>
 			</form>
-
-			<ul className="space-y-2">
-				{comments.map((comment, idx) => (
-					<li key={idx} className="bg-white p-2 rounded shadow text-sm">
-						<strong>{comment.userId?.username || "Anonymous"}</strong>:{" "}
-						{comment.text}
-					</li>
-				))}
-			</ul>
 		</div>
 	);
 };

@@ -11,7 +11,7 @@ const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem("user"));
-		const userId = user?._id?.toString();
+		const userId = user?.id?.toString();
 
 		if (userId) {
 			const likeArray = likes.map((id) => id.toString());

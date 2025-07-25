@@ -197,7 +197,7 @@ const Profile = () => {
 	const handleBioUpdate = async () => {
 		try {
 			const res = await axios.put(
-				`${uri}/api/users/bio`,
+				`${uri}/api/users/${user._id}/bio`,
 				{ bio: newBio },
 				{
 					headers: {
@@ -225,12 +225,16 @@ const Profile = () => {
 		formData.append("avatar", file);
 
 		try {
-			const res = await axios.put(`${uri}/api/users/avatar`, formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${token}`,
-				},
-			});
+			const res = await axios.put(
+				`${uri}/api/users/${user._id}/avatar`,
+				formData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 			setUser((prev) => ({ ...prev, avatar: res.data.avatar }));
 		} catch (err) {
 			console.error("Avatar update failed", err);

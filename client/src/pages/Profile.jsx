@@ -691,7 +691,11 @@ const Profile = () => {
 						}
 						alt="dp"
 						className="w-20 h-20 rounded-full object-cover cursor-pointer"
-						onClick={() => setShowAvatarOptions(!showAvatarOptions)}
+						onClick={() => {
+							isOwnProfile
+								? setShowAvatarOptions(!showAvatarOptions)
+								: setSelectedAvatar(user.avatar);
+						}}
 					/>
 					{isOwnProfile && showAvatarOptions && (
 						<div className="absolute top-full left-0 mt-1 w-40 bg-white border rounded shadow-md z-10">

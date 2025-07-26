@@ -8,6 +8,7 @@ import TopNavbar from "./components/Navbar";
 import BottomNavbar from "./components/BottomNavbar";
 import Comments from "./pages/Comments";
 import Profile from "./pages/Profile";
+import Shorts from "./pages/Shorts";
 
 // ✅ Toastify
 import { ToastContainer } from "react-toastify";
@@ -53,6 +54,15 @@ function Layout() {
 					element={
 						<ProtectedRoute>
 							<Profile />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/shorts"
+					element={
+						<ProtectedRoute>
+							<Shorts />
 						</ProtectedRoute>
 					}
 				/>

@@ -1,7 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
-import { MdOutlineSearch } from "react-icons/md";
+// import { MdOutlineSearch } from "react-icons/md";
+import { SiYoutubeshorts } from "react-icons/si";
+
 import { FaPlusSquare, FaHeart, FaUser } from "react-icons/fa";
 
 const BottomNavbar = () => {
@@ -11,7 +13,8 @@ const BottomNavbar = () => {
 
 	const navItems = [
 		{ icon: <AiFillHome />, to: "/feed" },
-		{ icon: <MdOutlineSearch />, to: "/search" },
+		// { icon: <MdOutlineSearch />, to: "/search" },
+		{ icon: <SiYoutubeshorts />, to: "/shorts" }, // 👈 shorts added here
 		{ icon: <FaPlusSquare />, to: "/upload" },
 		{ icon: <FaHeart />, to: "/likes" },
 		{ icon: <FaUser />, to: user ? `/profile/${user.username}` : "/login" },

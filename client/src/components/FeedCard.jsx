@@ -8,7 +8,7 @@ const uri = import.meta.env.VITE_BASE_URL;
 const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 	const [likeList, setLikeList] = useState([]);
 	const [isLiked, setIsLiked] = useState(false);
-	console.log("username is : ", username);
+	// console.log("username is : ", username);
 
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem("user"));
@@ -38,9 +38,9 @@ const FeedCard = ({ postId, username, image, caption, likes = [], avatar }) => {
 					},
 				}
 			);
-			console.log("UserId:", userId);
-			console.log("LikeList:", likeList);
-			console.log("IsLiked:", isLiked);
+			// console.log("UserId:", userId);
+			// console.log("LikeList:", likeList);
+			// console.log("IsLiked:", isLiked);
 
 			const updatedLikes = res.data.likes.map((id) => id.toString());
 			setLikeList(updatedLikes);

@@ -59,11 +59,15 @@ const Shorts = () => {
 	}, [videos]);
 
 	return (
-		<div className="h-screen overflow-y-scroll snap-y snap-mandatory bg-black relative">
+		<div
+			className="h-screen overflow-y-scroll snap-y snap-mandatory bg-black scroll-smooth"
+			style={{ scrollSnapType: "y mandatory", scrollBehavior: "smooth" }}
+		>
 			{videos.map((video, index) => (
 				<div
 					key={video.id.videoId}
 					className="w-full h-screen snap-start flex items-center justify-center relative"
+					style={{ scrollSnapAlign: "start" }}
 				>
 					<iframe
 						ref={(el) => (iframeRefs.current[index] = el)}

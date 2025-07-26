@@ -15,6 +15,7 @@ const Profile = () => {
 	const [newBio, setNewBio] = useState("");
 	const [editUsername, setEditUsername] = useState(false);
 	const [newUsername, setNewUsername] = useState("");
+	const [selectedPost, setSelectedPost] = useState(null);
 
 	const token = localStorage.getItem("token");
 	const loggedInUser = JSON.parse(localStorage.getItem("user"));
@@ -30,7 +31,6 @@ const Profile = () => {
 				console.error("Error fetching profile", err);
 			}
 		};
-
 		fetchProfile();
 	}, [username]);
 
@@ -241,9 +241,48 @@ const Profile = () => {
 							key={post._id}
 							src={post.imageUrl}
 							alt="user post"
-							className="w-full h-36 object-cover rounded"
+							className="w-full h-36 object-cover rounded cursor-pointer"
+							onClick={() => setSelectedPost(post)}
 						/>
 					))}
+				</div>
+			)}
+
+			{/* Modal Preview */}
+			{selectedPost && (
+				<div
+					className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-2 backdrop-blur-sm"
+					onClick={() => setSelectedPost(null)}
+				>
+					<div
+						className="bg-white rounded-xl p-4"
+						style={{
+							width: "90%",
+							maxWidth: "400px",
+							maxHeight: "90vh",
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "center",
+						}}
+						onClick={(e) => e.stopPropagation()}
+					>
+						<img
+							src={selectedPost.imageUrl}
+							alt="preview"
+							className="rounded-md object-contain max-h-[60vh] mb-4"
+						/>
+						<div className="flex items-center justify-center gap-3">
+							<img
+								src={
+									user.avatar ||
+									"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+								}
+								alt="avatar"
+								className="w-8 h-8 rounded-full object-cover"
+							/>
+							<p className="text-gray-800 font-medium">{user.username}</p>
+						</div>
+					</div>
 				</div>
 			)}
 		</div>

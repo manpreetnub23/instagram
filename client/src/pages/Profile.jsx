@@ -291,6 +291,289 @@
 
 // export default Profile;
 
+// import React, { useEffect, useState } from "react";
+// import { useParams, useNavigate } from "react-router-dom";
+// import axios from "../api/axios";
+// import { Pencil } from "lucide-react";
+
+// const uri = import.meta.env.VITE_BASE_URL;
+
+// const Profile = () => {
+// 	const { username } = useParams();
+// 	const navigate = useNavigate();
+
+// 	const [user, setUser] = useState(null);
+// 	const [posts, setPosts] = useState([]);
+// 	const [editBio, setEditBio] = useState(false);
+// 	const [newBio, setNewBio] = useState("");
+// 	const [editUsername, setEditUsername] = useState(false);
+// 	const [newUsername, setNewUsername] = useState("");
+// 	const [selectedPost, setSelectedPost] = useState(null);
+
+// 	const token = localStorage.getItem("token");
+// 	const loggedInUser = JSON.parse(localStorage.getItem("user"));
+// 	const isOwnProfile = loggedInUser?.username === username;
+
+// 	useEffect(() => {
+// 		const fetchProfile = async () => {
+// 			try {
+// 				const res = await axios.get(`${uri}/api/users/${username}`);
+// 				setUser(res.data.user);
+// 				setPosts(res.data.posts);
+// 			} catch (err) {
+// 				console.error("Error fetching profile", err);
+// 			}
+// 		};
+// 		fetchProfile();
+// 	}, [username]);
+
+// 	const handleBioUpdate = async () => {
+// 		try {
+// 			const res = await axios.put(
+// 				`${uri}/api/users/${user._id}/bio`,
+// 				{ bio: newBio },
+// 				{ headers: { Authorization: `Bearer ${token}` } }
+// 			);
+// 			setUser((prev) => ({ ...prev, bio: res.data.bio }));
+// 			setEditBio(false);
+// 		} catch (err) {
+// 			console.error("Failed to update bio", err);
+// 		}
+// 	};
+
+// 	const handleAvatarClick = () => {
+// 		if (!isOwnProfile) return;
+// 		document.getElementById("avatarInput").click();
+// 	};
+
+// 	const handleAvatarChange = async (e) => {
+// 		const file = e.target.files[0];
+// 		if (!file) return;
+
+// 		const formData = new FormData();
+// 		formData.append("avatar", file);
+
+// 		try {
+// 			const res = await axios.put(
+// 				`${uri}/api/users/${user._id}/avatar`,
+// 				formData,
+// 				{
+// 					headers: {
+// 						"Content-Type": "multipart/form-data",
+// 						Authorization: `Bearer ${token}`,
+// 					},
+// 				}
+// 			);
+// 			setUser((prev) => ({ ...prev, avatar: res.data.avatar }));
+// 		} catch (err) {
+// 			console.error("Avatar update failed", err);
+// 		}
+// 	};
+
+// 	const handleUsernameUpdate = async () => {
+// 		try {
+// 			const res = await axios.put(
+// 				`${uri}/api/users/username`,
+// 				{ username: newUsername },
+// 				{ headers: { Authorization: `Bearer ${token}` } }
+// 			);
+// 			setUser((prev) => ({ ...prev, username: res.data.username }));
+// 			setEditUsername(false);
+// 			localStorage.setItem("user", JSON.stringify(res.data));
+// 		} catch (err) {
+// 			console.error("Failed to update username", err);
+// 		}
+// 	};
+
+// 	const handleLogout = () => {
+// 		localStorage.removeItem("token");
+// 		localStorage.removeItem("user");
+// 		localStorage.removeItem("auth");
+// 		navigate("/");
+// 	};
+
+// 	if (!user) return <p className="text-center pt-10">Loading...</p>;
+
+// 	return (
+// 		<div className="max-w-md mx-auto pt-16 pb-20 p-4">
+// 			{/* Profile Info */}
+// 			<div className="flex items-center gap-4 mt-6 mb-6">
+// 				<div className="relative group">
+// 					<img
+// 						src={
+// 							user.avatar ||
+// 							"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+// 						}
+// 						alt="dp"
+// 						className="w-20 h-20 rounded-full object-cover cursor-pointer"
+// 						onClick={handleAvatarClick}
+// 					/>
+// 					{isOwnProfile && (
+// 						<input
+// 							type="file"
+// 							id="avatarInput"
+// 							className="hidden"
+// 							accept="image/*"
+// 							onChange={handleAvatarChange}
+// 						/>
+// 					)}
+// 				</div>
+
+// 				<div>
+// 					{/* Username edit */}
+// 					{isOwnProfile && editUsername ? (
+// 						<div className="flex items-center gap-2">
+// 							<input
+// 								type="text"
+// 								value={newUsername}
+// 								onChange={(e) => setNewUsername(e.target.value)}
+// 								className="border px-2 py-1 text-sm rounded"
+// 							/>
+// 							<button
+// 								className="text-blue-600 text-sm"
+// 								onClick={handleUsernameUpdate}
+// 							>
+// 								Save
+// 							</button>
+// 						</div>
+// 					) : (
+// 						<div className="flex items-center gap-1">
+// 							<h2 className="text-lg font-bold">{user.username}</h2>
+// 							{isOwnProfile && (
+// 								<button
+// 									onClick={() => {
+// 										setEditUsername(true);
+// 										setNewUsername(user.username);
+// 									}}
+// 								>
+// 									<Pencil className="w-4 h-4 text-gray-500" />
+// 								</button>
+// 							)}
+// 						</div>
+// 					)}
+
+// 					<p className="text-sm text-gray-600">{user.email}</p>
+
+// 					{/* Bio & Edit */}
+// 					{isOwnProfile && editBio ? (
+// 						<div className="flex flex-col gap-2 mt-1">
+// 							<div className="flex items-center gap-2">
+// 								<input
+// 									type="text"
+// 									value={newBio}
+// 									onChange={(e) => setNewBio(e.target.value)}
+// 									className="border px-2 py-1 text-sm rounded"
+// 								/>
+// 								<button
+// 									className="text-blue-600 text-sm"
+// 									onClick={handleBioUpdate}
+// 								>
+// 									Save
+// 								</button>
+// 							</div>
+// 						</div>
+// 					) : user.bio ? (
+// 						<div className="flex flex-col gap-1 mt-1">
+// 							<div className="flex items-center gap-1">
+// 								<p className="text-sm">{user.bio}</p>
+// 								{isOwnProfile && (
+// 									<button
+// 										onClick={() => {
+// 											setEditBio(true);
+// 											setNewBio(user.bio);
+// 										}}
+// 									>
+// 										<Pencil className="w-4 h-4 text-gray-500" />
+// 									</button>
+// 								)}
+// 							</div>
+// 						</div>
+// 					) : isOwnProfile ? (
+// 						<div className="flex flex-col mt-1 gap-1">
+// 							<button
+// 								className="text-xs text-blue-500"
+// 								onClick={() => setEditBio(true)}
+// 							>
+// 								Add bio
+// 							</button>
+// 						</div>
+// 					) : null}
+// 				</div>
+// 			</div>
+
+// 			{/* Log out Full Width */}
+// 			{isOwnProfile && (
+// 				<div className="w-full mb-4">
+// 					<button
+// 						onClick={handleLogout}
+// 						className="w-full bg-gradient-to-r from-[#315d94] to-[#6191c2] text-white py-1  text-center text-lg shadow-md"
+// 					>
+// 						LOG OUT
+// 					</button>
+// 				</div>
+// 			)}
+
+// 			{/* Posts Grid */}
+// 			<h3 className="text-md font-semibold mb-2">Posts</h3>
+// 			{posts.length === 0 ? (
+// 				<p className="text-gray-500 text-sm">No posts yet</p>
+// 			) : (
+// 				<div className="grid grid-cols-3 gap-3">
+// 					{posts.map((post) => (
+// 						<img
+// 							key={post._id}
+// 							src={post.imageUrl}
+// 							alt="user post"
+// 							className="w-full h-36 object-cover rounded cursor-pointer"
+// 							onClick={() => setSelectedPost(post)}
+// 						/>
+// 					))}
+// 				</div>
+// 			)}
+
+// 			{/* Modal Preview */}
+// 			{selectedPost && (
+// 				<div
+// 					className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm"
+// 					onClick={() => setSelectedPost(null)}
+// 				>
+// 					<div
+// 						className="bg-white rounded-xl p-4"
+// 						style={{
+// 							width: "90%",
+// 							maxWidth: "400px",
+// 							maxHeight: "90vh",
+// 							display: "flex",
+// 							flexDirection: "column",
+// 							justifyContent: "center",
+// 						}}
+// 						onClick={(e) => e.stopPropagation()}
+// 					>
+// 						<img
+// 							src={selectedPost.imageUrl}
+// 							alt="preview"
+// 							className="rounded-md object-contain max-h-[60vh] mb-4"
+// 						/>
+// 						<div className="flex items-center justify-center gap-3">
+// 							<img
+// 								src={
+// 									user.avatar ||
+// 									"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+// 								}
+// 								alt="avatar"
+// 								className="w-8 h-8 rounded-full object-cover"
+// 							/>
+// 							<p className="text-gray-800 font-medium">{user.username}</p>
+// 						</div>
+// 					</div>
+// 				</div>
+// 			)}
+// 		</div>
+// 	);
+// };
+
+// export default Profile;
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
@@ -309,6 +592,8 @@ const Profile = () => {
 	const [editUsername, setEditUsername] = useState(false);
 	const [newUsername, setNewUsername] = useState("");
 	const [selectedPost, setSelectedPost] = useState(null);
+	const [showAvatarOptions, setShowAvatarOptions] = useState(false);
+	const [selectedAvatar, setSelectedAvatar] = useState(null);
 
 	const token = localStorage.getItem("token");
 	const loggedInUser = JSON.parse(localStorage.getItem("user"));
@@ -341,8 +626,8 @@ const Profile = () => {
 		}
 	};
 
+	// Trigger file input for changing avatar
 	const handleAvatarClick = () => {
-		if (!isOwnProfile) return;
 		document.getElementById("avatarInput").click();
 	};
 
@@ -395,10 +680,10 @@ const Profile = () => {
 	if (!user) return <p className="text-center pt-10">Loading...</p>;
 
 	return (
-		<div className="max-w-md mx-auto pt-16 pb-20 p-4">
+		<div className="max-w-md mx-auto pt-16 pb-20 p-4 relative">
 			{/* Profile Info */}
-			<div className="flex items-center gap-4 mt-6 mb-6">
-				<div className="relative group">
+			<div className="flex items-center gap-4 mt-6 mb-6 relative">
+				<div className="relative">
 					<img
 						src={
 							user.avatar ||
@@ -406,8 +691,30 @@ const Profile = () => {
 						}
 						alt="dp"
 						className="w-20 h-20 rounded-full object-cover cursor-pointer"
-						onClick={handleAvatarClick}
+						onClick={() => setShowAvatarOptions(!showAvatarOptions)}
 					/>
+					{isOwnProfile && showAvatarOptions && (
+						<div className="absolute top-full left-0 mt-1 w-40 bg-white border rounded shadow-md z-10">
+							<button
+								onClick={() => {
+									setSelectedAvatar(user.avatar);
+									setShowAvatarOptions(false);
+								}}
+								className="w-full text-left px-3 py-2 hover:bg-gray-100"
+							>
+								View Profile Photo
+							</button>
+							<button
+								onClick={() => {
+									handleAvatarClick();
+									setShowAvatarOptions(false);
+								}}
+								className="w-full text-left px-3 py-2 hover:bg-gray-100"
+							>
+								Change Profile Photo
+							</button>
+						</div>
+					)}
 					{isOwnProfile && (
 						<input
 							type="file"
@@ -420,7 +727,7 @@ const Profile = () => {
 				</div>
 
 				<div>
-					{/* Username edit */}
+					{/* Username Edit */}
 					{isOwnProfile && editUsername ? (
 						<div className="flex items-center gap-2">
 							<input
@@ -506,7 +813,7 @@ const Profile = () => {
 				<div className="w-full mb-4">
 					<button
 						onClick={handleLogout}
-						className="w-full bg-gradient-to-r from-[#315d94] to-[#6191c2] text-white py-1  text-center text-lg shadow-md"
+						className="w-full bg-gradient-to-r from-[#315d94] to-[#6191c2] text-white py-2 rounded-md text-center text-lg shadow-md hover:opacity-90 transition"
 					>
 						LOG OUT
 					</button>
@@ -531,7 +838,7 @@ const Profile = () => {
 				</div>
 			)}
 
-			{/* Modal Preview */}
+			{/* Modal Preview for Posts */}
 			{selectedPost && (
 				<div
 					className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm"
@@ -552,6 +859,44 @@ const Profile = () => {
 						<img
 							src={selectedPost.imageUrl}
 							alt="preview"
+							className="rounded-md object-contain max-h-[60vh] mb-4"
+						/>
+						<div className="flex items-center justify-center gap-3">
+							<img
+								src={
+									user.avatar ||
+									"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+								}
+								alt="avatar"
+								className="w-8 h-8 rounded-full object-cover"
+							/>
+							<p className="text-gray-800 font-medium">{user.username}</p>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* Modal Preview for Avatar (View Profile Photo) */}
+			{selectedAvatar && (
+				<div
+					className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm"
+					onClick={() => setSelectedAvatar(null)}
+				>
+					<div
+						className="bg-white rounded-xl p-4"
+						style={{
+							width: "90%",
+							maxWidth: "400px",
+							maxHeight: "90vh",
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "center",
+						}}
+						onClick={(e) => e.stopPropagation()}
+					>
+						<img
+							src={selectedAvatar}
+							alt="profile preview"
 							className="rounded-md object-contain max-h-[60vh] mb-4"
 						/>
 						<div className="flex items-center justify-center gap-3">

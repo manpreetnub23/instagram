@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		default: "",
 	},
+	// Add these two lines inside your User schema:
+	followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+	following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const User = mongoose.model("User", userSchema);

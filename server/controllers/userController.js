@@ -88,3 +88,55 @@ export const updateUsername = async (req, res) => {
 		res.status(500).json({ message: "Error updating username" });
 	}
 };
+
+export const followUser = async (req, res) => {
+	try {
+		const currentUser = await User.findById(req.user.id);
+		const targetUser = await User.findById(req.params.id);
+
+		if (!targetUser || !currentUser) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		if (!targetUser.followers.includes(currentUser._id)) {
+			targetUser.followers.push(currentUser._id);
+			currentUser.following.push(targetUser._id);
+
+			await targetUser.save();
+			await currentUser.save();
+		}
+
+		res.status(200).json({ success: true, message: "Followed" });
+	} catch (err) {
+		console.error("Follow error:", err);
+		res.status(500).json({ error: "Failed to follow user" });
+	}
+};
+
+// @desc   Unfollow a user
+// @route  POST /api/users/:id/unfollow
+export const unfollowUser = async (req, res) => {
+	try {
+		const currentUser = await User.findById(req.user.id);
+		const targetUser = await User.findById(req.params.id);
+
+		if (!targetUser || !currentUser) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		targetUser.followers = targetUser.followers.filter(
+			(id) => id.toString() !== currentUser._id.toString()
+		);
+		currentUser.following = currentUser.following.filter(
+			(id) => id.toString() !== targetUser._id.toString()
+		);
+
+		await targetUser.save();
+		await currentUser.save();
+
+		res.status(200).json({ success: true, message: "Unfollowed" });
+	} catch (err) {
+		console.error("Unfollow error:", err);
+		res.status(500).json({ error: "Failed to unfollow user" });
+	}
+};
